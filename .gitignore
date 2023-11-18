@@ -21,6 +21,6 @@ vendor/
 go.work
 
 logs/
-./idea/
+.idea/
 invest-api-go-sdk/
 
