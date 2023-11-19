@@ -14,8 +14,7 @@ import (
 	"time"
 )
 
-// TODO: do I need shared config for the python and Go parts?
-// конфиг, развернуть на стенде, пуш на гитхаб (+версионность, тэги), добавить реальный счет и деньги, левередж транзакций, смотреть чтобы файлы логов не переполнялись
+// развернуть на стенде, пуш на гитхаб (+версионность, тэги), добавить реальный счет и деньги, левередж транзакций, смотреть чтобы файлы логов не переполнялись
 // нужен другой токен? метрика живости стенда
 // used with v1 api
 
@@ -30,6 +29,9 @@ func main() {
 	zapConfig.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.DateTime)
 	zapConfig.EncoderConfig.TimeKey = "time"
 	l, err := zapConfig.Build()
+	if err != nil {
+		log.Fatalf("logger creating error %v", err)
+	}
 	logger := l.Sugar()
 	defer func() {
 		err := logger.Sync()
@@ -37,9 +39,6 @@ func main() {
 			log.Printf(err.Error())
 		}
 	}()
-	if err != nil {
-		log.Fatalf("logger creating error %v", err)
-	}
 
 	configParams := getConfigParams(logger)
 
