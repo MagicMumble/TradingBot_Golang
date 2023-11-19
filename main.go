@@ -19,23 +19,11 @@ import (
 // нужен другой токен? метрика живости стенда
 // used with v1 api
 
+// start script:
+// go build (-o <executable name>)
+// ./TradingBot -config <path to config file>
 func main() {
 	var requestCounter uint64
-
-	config := investgo.Config{
-		EndPoint:                      endPointSandbox,
-		Token:                         tokenSandbox,
-		AppName:                       "invest-api-go-sdk",
-		AccountId:                     "",
-		DisableResourceExhaustedRetry: false,
-		DisableAllRetry:               false,
-		MaxRetries:                    3,
-	}
-
-	requestURL := fmt.Sprintf("http://localhost:%v/data", serverPort)
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	zapConfig := zap.NewDevelopmentConfig()
 	zapConfig.OutputPaths = []string{fmt.Sprintf("./logs/%s_stats.log", time.Now().Format("2006_January_02")), "stderr"}
@@ -52,6 +40,24 @@ func main() {
 	if err != nil {
 		log.Fatalf("logger creating error %v", err)
 	}
+
+	configParams := getConfigParams(logger)
+
+	config := investgo.Config{
+		EndPoint:                      configParams.TargetAPI + ":443",
+		Token:                         configParams.Token,
+		AppName:                       "invest-api-go-sdk",
+		AccountId:                     "",
+		DisableResourceExhaustedRetry: false,
+		DisableAllRetry:               false,
+		MaxRetries:                    3,
+	}
+
+	requestURL := fmt.Sprintf("http://localhost:%v/data", configParams.Port)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	client, err := investgo.NewClient(ctx, config, logger)
 	if err != nil {
 		logger.Fatalf("client creating error %v", err.Error())
