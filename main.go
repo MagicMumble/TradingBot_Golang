@@ -117,7 +117,7 @@ func main() {
 				return
 			case <-ticker.C:
 				// 0 - Sunday, 6 - Saturday
-				if weekday, hour, minute := getMoscowTime(); !(weekday != 0 && weekday != 6 && hour >= openMoscowHour && hour*60+minute < closeMoscowHour*60+closeMoscowMinute) {
+				if weekday, hour, minute := getMoscowTime(); !(weekday != 0 && weekday != 6 && hour*60+minute > openMoscowHour*60+openMoscowMinute && hour*60+minute < closeMoscowHour*60+closeMoscowMinute) {
 					if !exchangeClosed {
 						logger.Infof("Exchange is closed for today.")
 						actions <- 4

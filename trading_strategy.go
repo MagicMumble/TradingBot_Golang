@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	openMoscowHour    = 10
-	closeMoscowHour   = 17
+	openMoscowHour    = 8
+	openMoscowMinute  = 30
+	closeMoscowHour   = 20
 	closeMoscowMinute = 30
 )
 
