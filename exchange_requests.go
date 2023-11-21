@@ -67,6 +67,22 @@ func getAccountId(client *investgo.Client, sandboxService *investgo.SandboxServi
 	return newAccId, err
 }
 
+func createAccountId(client *investgo.Client, sandboxService *investgo.SandboxServiceClient, logger investgo.Logger) (string, error) {
+	var err error
+	defer func() {
+		if err != nil {
+			logger.Errorf("Failed to get account id: %v", err.Error())
+		}
+	}()
+	openAccount, err := sandboxService.OpenSandboxAccount()
+	if err != nil {
+		return "", err
+	}
+	newAccId := openAccount.GetAccountId()
+	client.Config.AccountId = newAccId
+	return newAccId, err
+}
+
 func depositMoney(sandboxService *investgo.SandboxServiceClient, accountId string, money int64, logger investgo.Logger) error {
 	logger.Infof("Sent depositMoney request")
 	payInResp, err := sandboxService.SandboxPayIn(&investgo.SandboxPayInRequest{

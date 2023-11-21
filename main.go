@@ -46,7 +46,7 @@ func main() {
 		EndPoint:                      configParams.TargetAPI + ":443",
 		Token:                         configParams.Token,
 		AppName:                       "invest-api-go-sdk",
-		AccountId:                     "",
+		AccountId:                     configParams.AccountID,
 		DisableResourceExhaustedRetry: false,
 		DisableAllRetry:               false,
 		MaxRetries:                    3,
@@ -71,16 +71,19 @@ func main() {
 
 	// сервис песочницы нужен лишь для управления счетами песочницы и пополнения баланса
 	// остальной функционал доступен через обычные сервисы, но с эндпоинтом песочницы
-	sandboxService := client.NewSandboxServiceClient()
+	//sandboxService := client.NewSandboxServiceClient()
+
+	//accId, err := createAccountId(client, sandboxService, logger)
+	//fmt.Println("created new account!, id:", accId)
 
 	// TODO: to work with real money I need a real account
-	accId, err := getAccountId(client, sandboxService, logger)
-	if err != nil {
-		return
-	}
+	//accId, err := getAccountId(client, sandboxService, logger)
+	//if err != nil {
+	//	return
+	//}
 
-	// пополняем счет песочницы на 100 000 рублей
-	//depositMoney(sandboxService, accId, 100000, logger)
+	// пополняем счет песочницы на 205 000 рублей
+	//depositMoney(sandboxService, client.Config.AccountId, 205000, logger)
 
 	// TCS - same but in dollars
 	id_TCSG, err := getInstrumentId(client, logger, "TCSG")
@@ -128,7 +131,7 @@ func main() {
 				if exchangeClosed {
 					logger.Infof("Exchange is open now.")
 					wg.Add(1)
-					go startStrategy(actions, client, accId, id_TCSG, &wg)
+					go startStrategy(actions, client, client.Config.AccountId, id_TCSG, &wg)
 					exchangeClosed = false
 				}
 				request, err := getLastPriceAndVolume(client, id_TCSG, &requestCounter, logger)

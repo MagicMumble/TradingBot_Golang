@@ -12,6 +12,7 @@ type Config struct {
 	Token     string `yaml:"token"`
 	Port      int    `yaml:"server_port"`
 	TargetAPI string `yaml:"target_api"`
+	AccountID string `yaml:"account_id"`
 }
 
 func getConfigFilePath(logger investgo.Logger) string {
@@ -34,6 +35,7 @@ func readConfig(path string, logger investgo.Logger) Config {
 		Token:     obj["token"].(string),
 		Port:      obj["server_port"].(int),
 		TargetAPI: obj["target_api"].(string),
+		AccountID: obj["account_id"].(string),
 	}
 }
 
