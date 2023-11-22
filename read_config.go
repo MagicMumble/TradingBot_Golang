@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
@@ -15,16 +14,16 @@ type Config struct {
 	AccountID string `yaml:"account_id"`
 }
 
-func getConfigFilePath(logger investgo.Logger) string {
+func getConfigFilePath() string {
 	configFilePath := flag.String("config", "", "a filepath to the config file")
 	flag.Parse()
 	return *configFilePath
 }
 
-func readConfig(path string, logger investgo.Logger) Config {
+func readConfig(path string) Config {
 	yamlFile, err := os.ReadFile(path)
 	if err != nil {
-		logger.Infof("Cannot read config file: %v", err.Error())
+		log.Fatalf("Cannot read config file: %v", err)
 	}
 	obj := make(map[string]interface{})
 	err = yaml.Unmarshal(yamlFile, obj)
@@ -39,8 +38,8 @@ func readConfig(path string, logger investgo.Logger) Config {
 	}
 }
 
-func getConfigParams(logger investgo.Logger) Config {
-	configFilePath := getConfigFilePath(logger)
-	config := readConfig(configFilePath, logger)
+func getConfigParams() Config {
+	configFilePath := getConfigFilePath()
+	config := readConfig(configFilePath)
 	return config
 }

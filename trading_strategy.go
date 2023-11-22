@@ -72,9 +72,9 @@ func calculateStatisticsAfterSell(stats *TradingStatistics, lotsExecuted int64, 
 	logger.Infof("Transaction took %v minutes\n", stats.transactionLength)
 }
 
-func getNewLogger() *zap.SugaredLogger {
+func getNewLogger(accountId string) *zap.SugaredLogger {
 	zapConfig := zap.NewDevelopmentConfig()
-	zapConfig.OutputPaths = []string{fmt.Sprintf("./logs/%s_tradeStats.log", time.Now().Format("2006_January_02")), "stderr"}
+	zapConfig.OutputPaths = []string{fmt.Sprintf("./logs/%s_%s_tradeStats.log", time.Now().Format("2006_January_02"), accountId), "stderr"}
 	zapConfig.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.DateTime)
 	zapConfig.EncoderConfig.TimeKey = "time"
 	l, err := zapConfig.Build()
@@ -87,7 +87,7 @@ func getNewLogger() *zap.SugaredLogger {
 func startStrategy(actions chan int, client *investgo.Client, accId string, instrumentId string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	logger := getNewLogger()
+	logger := getNewLogger(accId)
 	defer func() {
 		err := logger.Sync()
 		if err != nil {

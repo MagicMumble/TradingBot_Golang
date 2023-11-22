@@ -23,9 +23,10 @@ import (
 // ./TradingBot -config <path to config file>
 func main() {
 	var requestCounter uint64
+	configParams := getConfigParams()
 
 	zapConfig := zap.NewDevelopmentConfig()
-	zapConfig.OutputPaths = []string{fmt.Sprintf("./logs/%s_stats.log", time.Now().Format("2006_January_02")), "stderr"}
+	zapConfig.OutputPaths = []string{fmt.Sprintf("./logs/%s_%s_stats.log", time.Now().Format("2006_January_02"), configParams.AccountID), "stderr"}
 	zapConfig.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.DateTime)
 	zapConfig.EncoderConfig.TimeKey = "time"
 	l, err := zapConfig.Build()
@@ -39,8 +40,6 @@ func main() {
 			log.Printf(err.Error())
 		}
 	}()
-
-	configParams := getConfigParams(logger)
 
 	config := investgo.Config{
 		EndPoint:                      configParams.TargetAPI + ":443",
