@@ -121,6 +121,7 @@ func main() {
 				// 0 - Sunday, 6 - Saturday
 				if weekday, hour, minute := getMoscowTime(); !(weekday != 0 && weekday != 6 && hour*60+minute > openMoscowHour*60+openMoscowMinute && hour*60+minute < closeMoscowHour*60+closeMoscowMinute) {
 					if !exchangeClosed {
+						// TODO: after we get the message in logs that exchange is closed for today and press ctrl c - the program does not stop! check it
 						logger.Infof("Exchange is closed for today.")
 						actions <- 4
 						exchangeClosed = true
